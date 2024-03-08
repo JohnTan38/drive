@@ -12,7 +12,7 @@ pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_colwidth', None)
 pd.set_option('mode.chained_assignment', None)
 
-showWarningOnDirectExecution = false
+
 st.set_page_config(page_title="DLP", page_icon="🚗", layout="wide")
 
 st.markdown("<h1 style='text-align: center; color: black;'>Driver Loyalty Program</h1>", unsafe_allow_html=True)
