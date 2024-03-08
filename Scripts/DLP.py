@@ -156,9 +156,15 @@ for driverCode in lst_drivers:
     lst_midnight = midnight['Completion time'].tolist()
 
     import datetime as dt
-    initial_time = pd.to_datetime(lst_midnight[0]).strftime("%Y-%d-%m")
+    try:
+        initial_time = pd.to_datetime(parse_date(lst_midnight[0]))#, format='mixed', dayfirst=True) #.strftime("%Y-%d-%m")
+    except Exception as e:
+        print(e)
     print(initial_time)
-    final_time = pd.to_datetime(lst_midnight[-1], format='mixed', dayfirst=True) #.strftime("%Y-%d-%m")
+    try:
+        final_time = pd.to_datetime(parse_date(lst_midnight[-1])) #, format='mixed', dayfirst=True) #.strftime("%Y-%d-%m")
+    except Exception as e:
+        print(e)
     print(final_time)
     numbr_of_days = (pd.to_datetime(final_time) - pd.to_datetime(initial_time)).days #number of days
     lst_start_date = []
@@ -372,9 +378,9 @@ for midnightDriver in lst_midnightDrivers:
     lst_midnight = midnight['Completion time'].tolist()
 
     import datetime as dt
-    initial_time = pd.to_datetime(lst_midnight[0]).strftime("%Y-%d-%m")
+    initial_time = pd.to_datetime(parse_date(lst_midnight[0])) #.strftime("%Y-%d-%m")
     print(initial_time)
-    final_time = pd.to_datetime(lst_midnight[-1], format='mixed', dayfirst=True) #.strftime("%Y-%m-%d")
+    final_time = pd.to_datetime(parse_date(lst_midnight[-1])) #, format='mixed', dayfirst=True) #.strftime("%Y-%m-%d")
     print(final_time)
     numbr_of_days = (pd.to_datetime(final_time) - pd.to_datetime(initial_time)).days #number of days
     lst_start_date = []
@@ -451,37 +457,49 @@ for midnightDriver in lst_midnightDrivers:
     lst_incentive_PublicHoliday =[]
     for ele in str_date_unique_sorted:
             idx = str_date_unique_sorted.index(ele)
-            if ele in str_list_holidays and list(c_sort.values())[idx]>5:
-                #if pd.to_datetime(ele).weekday() ==6:
-                incentive_PublicHoliday = 40 #work on a public holiday & trips>5                            
-            elif ele in str_list_holidays:
-                incentive_PublicHoliday = 20                
-            else:
-                incentive_PublicHoliday = 0
+            try:
+                 
+                if ele in str_list_holidays and list(c_sort.values())[idx]>5:
+                    #if pd.to_datetime(ele).weekday() ==6:
+                    incentive_PublicHoliday = 40 #work on a public holiday & trips>5                            
+                elif ele in str_list_holidays:
+                    incentive_PublicHoliday = 20                
+                else:
+                    incentive_PublicHoliday = 0
+            except Exception as e:
+                 print(e)
             lst_incentive_PublicHoliday.append(incentive_PublicHoliday)
     #print(lst_incentive_PublicHoliday)
     
     lst_incentive_Sunday =[]
     for ele in str_date_unique_sorted:
         idx = str_date_unique_sorted.index(ele)
-        if pd.to_datetime(ele).weekday() ==0 and list(c_sort.values())[idx]>5:
-            incentive_Sunday = 40 #work on Sunday & trips>5        
-        elif pd.to_datetime(ele).weekday() ==0:
-            incentive_Sunday = 20            
-        else:
-            incentive_Sunday = 0
+        try:
+             
+            if pd.to_datetime(ele).weekday() ==0 and list(c_sort.values())[idx]>5:
+                incentive_Sunday = 40 #work on Sunday & trips>5        
+            elif pd.to_datetime(ele).weekday() ==0:
+                incentive_Sunday = 20            
+            else:
+                incentive_Sunday = 0
+        except Exception as e:
+            print(e)
         lst_incentive_Sunday.append(incentive_Sunday)
     #print(lst_incentive_Sunday)
         
     lst_incentive_MondayHoliday =[]
     for ele in str_date_unique_sorted:
         idx = str_date_unique_sorted.index(ele)
-        if pd.to_datetime(ele).weekday() ==0 and (pd.to_datetime(ele) - timedelta(days=1)) in str_list_holidays and list(c_sort.values())[idx]>5:
-                incentive_MondayHoliday = 40 #work on Monday (Sunday holiday) & trips>5
-        elif pd.to_datetime(ele).weekday() ==0 and (pd.to_datetime(ele) - timedelta(days=1)) in str_list_holidays:
-                incentive_MondayHoliday = 20
-        else:
-                incentive_MondayHoliday = 0
+        try:
+             
+            if pd.to_datetime(ele).weekday() ==0 and (pd.to_datetime(ele) - timedelta(days=1)) in str_list_holidays and list(c_sort.values())[idx]>5:
+                    incentive_MondayHoliday = 40 #work on Monday (Sunday holiday) & trips>5
+            elif pd.to_datetime(ele).weekday() ==0 and (pd.to_datetime(ele) - timedelta(days=1)) in str_list_holidays:
+                    incentive_MondayHoliday = 20
+            else:
+                    incentive_MondayHoliday = 0
+        except Exception as e:
+            print(e)
         lst_incentive_MondayHoliday.append(incentive_MondayHoliday)
 
     
