@@ -198,9 +198,10 @@ for driverCode in lst_drivers:
 
 Driver = pd.DataFrame(lstDriver, columns=['NAME', 'Code', 'ActualNumber of TripsPerformed', 'Number of DaysWorked', 
                                           'EarnedIncentive', 'FirstWorkingDay'])
-mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
-mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
-mainControl.drop(columns=['NAME_x', 'NAME_y'])
+if st.button("Get MainControl"):
+    mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
+    mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
+    mainControl.drop(columns=['NAME_x', 'NAME_y'])
 
 def int_or_fl(val):
     try:
