@@ -257,6 +257,7 @@ def last_date_of_month(year, month):
         last_date = datetime(year, month + 1, 1) + timedelta(days=-1)
     return last_date.strftime("%Y-%m-%d")
 
+global mainControl_1
 if st.button("Get MainControl"):
     mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
     mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
@@ -330,7 +331,6 @@ if st.button("Get MainControl"):
                                                                                                     'Driver - Hosp', 
                                                                                                     'Driver - Workshop']].fillna('-')
     mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
-global mainControl_1
 
 #2
 import itertools
