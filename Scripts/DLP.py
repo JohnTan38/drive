@@ -521,9 +521,9 @@ Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer'
 Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 
 mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['xlsx'])
-mainControl_2 = pd.read_excel(mainControl_uploaded, engine='openpyxl')
 
 if st.button('Get Incentive'):
+    mainControl_2 = pd.read_excel(mainControl_uploaded, engine='openpyxl')
     incentiveFinal = pd.merge(mainControl_2.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
 
     cols_add = ['TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive']
