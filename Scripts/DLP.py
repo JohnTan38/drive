@@ -31,13 +31,14 @@ def img_to_html(img_path):
 st.markdown("<p style='text-align: center; color: grey;'>"+img_to_html('./image/cars.png')+"</p>", unsafe_allow_html=True)
 
 st.divider()
+emp_url = 'https://raw.githubusercontent.com/JohnTan38/agi/main/docs/EMP.xlsx'
 #emp_uploaded = st.file_uploader("EMPLOYEE data file", type=['xlsx'])
-emp_uploaded = pd.read_excel('https://raw.githubusercontent.com/JohnTan38/agi/main/docs/EMP.xlsx', engine='openpyxl')
+emp_uploaded = pd.read_excel(emp_url, engine='openpyxl')
 
 #emp = pd.read_excel(path_dlp+ "EMP.xlsx", sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
 #offDay = pd.read_excel(path_dlp + "EMP.xlsx", sheet_name='OffDay', engine='openpyxl')
 if emp_uploaded is not None:
-    emp = pd.read_excel('https://raw.githubusercontent.com/JohnTan38/agi/main/docs/EMP.xlsx', sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
+    emp = pd.read_excel(emp_url, sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
     col_emp = ['Code', 'NAME', 'JOINING DATE', 'SCHEME']
     emp = emp[col_emp]
     dct_emp = emp.set_index('NAME').to_dict()['Code']
@@ -46,7 +47,7 @@ if emp_uploaded is not None:
     st.dataframe(emp)
 
     st.divider()
-    offDay = pd.read_excel(emp_uploaded, sheet_name='OffDay', engine='openpyxl')
+    offDay = pd.read_excel(emp_url, sheet_name='OffDay', engine='openpyxl')
     col_offDay = ['NAME', 'Code', 'Off Day', 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']                   
     offDay = offDay[col_offDay]
     offDay.fillna(0, inplace=True)
