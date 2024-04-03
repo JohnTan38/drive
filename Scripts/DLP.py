@@ -504,8 +504,7 @@ for midnightDriver in lst_midnightDrivers:
         except Exception as e:
             print(e)
         lst_incentive_MondayHoliday.append(incentive_MondayHoliday)
-
-    
+   
     holiday_incentive.extend([[midnightDriver, sum(lst_incentive_PublicHoliday), sum(lst_incentive_Sunday), 
                                sum(lst_incentive_MondayHoliday) ]])
 
@@ -515,19 +514,20 @@ holidaysIncentive = pd.DataFrame(holiday_incentive, columns=['NAME', 'PublicHoli
 
 #print(count_non_zero_values(c_sort)) #number of working days where trips are made
 
-
 Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer') # (3a)
 Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
-incentiveFinal = pd.merge(mainControl_1.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
 
-cols_add = ['TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive']
-incentiveFinal['GrandTotal_Incentive'] = incentiveFinal[cols_add].sum(axis=1)
-col_final = ['NAME', 'Code', 'ActualNumber of TripsPerformed', 'Number of DaysWorked', 'Off Day', 
-             'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop', 'FinalWorkingDay', 'TotalTrips', 'SCHEME', 
-             'GrandTotal_Incentive', 'TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive', 
-             'DLP', 'JOINING DATE', 'ServiceYear', 'DLP Amount']
-incentiveFinal = incentiveFinal[col_final]
+if st.button('Get Incentive'):
+    incentiveFinal = pd.merge(mainControl_1.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
 
-if incentiveFinal is not None:
-    st.write("### Driver Incentive DataTable")
-    st.dataframe(incentiveFinal)
+    cols_add = ['TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive']
+    incentiveFinal['GrandTotal_Incentive'] = incentiveFinal[cols_add].sum(axis=1)
+    col_final = ['NAME', 'Code', 'ActualNumber of TripsPerformed', 'Number of DaysWorked', 'Off Day', 
+                 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop', 'FinalWorkingDay', 'TotalTrips', 'SCHEME', 
+                 'GrandTotal_Incentive', 'TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive', 
+                 'DLP', 'JOINING DATE', 'ServiceYear', 'DLP Amount']
+    incentiveFinal = incentiveFinal[col_final]
+
+    if incentiveFinal is not None:
+        st.write("### Driver Incentive DataTable")
+        st.dataframe(incentiveFinal)
