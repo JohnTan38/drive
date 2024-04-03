@@ -513,7 +513,7 @@ driversIncentive = pd.DataFrame(lst_sum_driverIncentive, columns=['NAME', 'Total
 holidaysIncentive = pd.DataFrame(holiday_incentive, columns=['NAME', 'PublicHolidayIncentive', 'SundayIncentive', 
                                                              'MondayHolidayIncentive'])
 
-print(count_non_zero_values(c_sort)) #number of working days where trips are made
+#print(count_non_zero_values(c_sort)) #number of working days where trips are made
 
 
 Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer') # (3a)
