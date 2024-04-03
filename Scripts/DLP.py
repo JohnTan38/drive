@@ -331,6 +331,7 @@ if st.button("Get MainControl"):
                                                                                                     'Driver - Hosp', 
                                                                                                     'Driver - Workshop']].fillna('-')
     mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
+    st.write('Please download and save as MAIN_CONTROL.csv')
     st.dataframe(mainControl_1, use_container_width=True)
 
 #2
@@ -520,7 +521,7 @@ holidaysIncentive = pd.DataFrame(holiday_incentive, columns=['NAME', 'PublicHoli
 Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer') # (3a)
 Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 
-mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['xlsx'])
+mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['csv'])
 
 if st.button('Get Incentive'):
     mainControl_2 = pd.read_excel(mainControl_uploaded, engine='openpyxl')
