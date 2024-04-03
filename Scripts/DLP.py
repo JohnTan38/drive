@@ -31,7 +31,8 @@ def img_to_html(img_path):
 st.markdown("<p style='text-align: center; color: grey;'>"+img_to_html('./image/cars.png')+"</p>", unsafe_allow_html=True)
 
 st.divider()
-emp_uploaded = st.file_uploader("EMPLOYEE data file", type=['xlsx'])
+#emp_uploaded = st.file_uploader("EMPLOYEE data file", type=['xlsx'])
+emp_uploaded = pd.read_excel('https://raw.githubusercontent.com.sg/JohnTan38/agi/main/docs/EMP.xlsx')
 
 #path_dlp = r"C:/Users/appremote/Documents/DLP/"
 #emp = pd.read_excel(path_dlp+ "EMP.xlsx", sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
