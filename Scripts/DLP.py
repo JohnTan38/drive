@@ -38,7 +38,8 @@ emp_uploaded = pd.read_excel('https://raw.githubusercontent.com/JohnTan38/agi/ma
 #emp = pd.read_excel(path_dlp+ "EMP.xlsx", sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
 #offDay = pd.read_excel(path_dlp + "EMP.xlsx", sheet_name='OffDay', engine='openpyxl')
 if emp_uploaded is not None:
-    emp = pd.read_excel(emp_uploaded, sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
+    #emp = pd.read_excel(emp_uploaded, sheet_name='SalarySummaryPayPeriodReport', engine='openpyxl')
+    emp = emp_uploaded['SalarySummaryPayPeriodReport']
     col_emp = ['Code', 'NAME', 'JOINING DATE', 'SCHEME']
     emp = emp[col_emp]
     dct_emp = emp.set_index('NAME').to_dict()['Code']
