@@ -199,10 +199,19 @@ for driverCode in lst_drivers:
 
 Driver = pd.DataFrame(lstDriver, columns=['NAME', 'Code', 'ActualNumber of TripsPerformed', 'Number of DaysWorked', 
                                           'EarnedIncentive', 'FirstWorkingDay'])
+from calendar import monthrange
+import holidays
+global str_list_holidays
 if st.button("Get MainControl"):
     mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
     mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
     mainControl.drop(columns=['NAME_x', 'NAME_y'])
+
+    yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
+    str_list_holidays =[]
+    list_holidays = list((holidays.SG(years=[yr])).keys())
+    for holiday in list_holidays:
+            str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
 
 def int_or_fl(val):
     try:
@@ -214,16 +223,11 @@ def int_or_fl(val):
             pass
     return val #int/float from obj
 
-from calendar import monthrange
-import holidays
-global str_list_holidays
-
-
-yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
-str_list_holidays =[]
-list_holidays = list((holidays.SG(years=[yr])).keys())
-for holiday in list_holidays:
-        str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
+#yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
+#str_list_holidays =[]
+#list_holidays = list((holidays.SG(years=[yr])).keys())
+#for holiday in list_holidays:
+        #str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
 
 def holiday_in_month(start,end):
     #str_list_holidays = []
