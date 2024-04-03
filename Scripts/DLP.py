@@ -262,7 +262,8 @@ if st.button("Get MainControl"):
     mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
     mainControl.drop(columns=['NAME_x', 'NAME_y'])
 
-    yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
+    yr = 2024
+    #yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
     str_list_holidays =[]
     list_holidays = list((holidays.SG(years=[yr])).keys())
     for holiday in list_holidays:
