@@ -523,6 +523,8 @@ Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 
 mainControl_uploaded = st.file_uploader("Upload MAIN_CONTROL.csv", type=['csv'])
 
+st.divider()
+
 if st.button('Get Incentive'):
     mainControl_2 = pd.read_csv(mainControl_uploaded)
     incentiveFinal = pd.merge(mainControl_2.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
