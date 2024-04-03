@@ -331,6 +331,7 @@ if st.button("Get MainControl"):
                                                                                                     'Driver - Hosp', 
                                                                                                     'Driver - Workshop']].fillna('-')
     mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
+    st.dataframe(mainControl_1, use_container_width=True)
 
 #2
 import itertools
