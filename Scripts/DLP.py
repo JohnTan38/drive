@@ -520,8 +520,11 @@ holidaysIncentive = pd.DataFrame(holiday_incentive, columns=['NAME', 'PublicHoli
 Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer') # (3a)
 Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 
+mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['xlsx'])
+mainControl_2 = pd.read_excel(mainControl_uploaded, engine='openpyxl')
+
 if st.button('Get Incentive'):
-    incentiveFinal = pd.merge(mainControl_1.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
+    incentiveFinal = pd.merge(mainControl_2.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
 
     cols_add = ['TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive']
     incentiveFinal['GrandTotal_Incentive'] = incentiveFinal[cols_add].sum(axis=1)
