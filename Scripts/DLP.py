@@ -330,6 +330,7 @@ if st.button("Get MainControl"):
                                                                                                     'Driver - Hosp', 
                                                                                                     'Driver - Workshop']].fillna('-')
     mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
+global mainControl_1
 
 #2
 import itertools
