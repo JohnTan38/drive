@@ -521,7 +521,7 @@ holidaysIncentive = pd.DataFrame(holiday_incentive, columns=['NAME', 'PublicHoli
 Incentive = pd.merge(driversIncentive, holidaysIncentive, on='NAME', how='outer') # (3a)
 Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 
-mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['csv'])
+mainControl_uploaded = st.file_uploader("Upload MAIN_CONTROL.csv", type=['csv'])
 
 if st.button('Get Incentive'):
     mainControl_2 = pd.read_csv(mainControl_uploaded)
