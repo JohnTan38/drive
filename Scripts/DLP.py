@@ -202,16 +202,6 @@ Driver = pd.DataFrame(lstDriver, columns=['NAME', 'Code', 'ActualNumber of Trips
 from calendar import monthrange
 import holidays
 global str_list_holidays
-if st.button("Get MainControl"):
-    mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
-    mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
-    mainControl.drop(columns=['NAME_x', 'NAME_y'])
-
-    yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
-    str_list_holidays =[]
-    list_holidays = list((holidays.SG(years=[yr])).keys())
-    for holiday in list_holidays:
-            str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
 
 def int_or_fl(val):
     try:
@@ -222,12 +212,6 @@ def int_or_fl(val):
         except ValueError:
             pass
     return val #int/float from obj
-
-#yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
-#str_list_holidays =[]
-#list_holidays = list((holidays.SG(years=[yr])).keys())
-#for holiday in list_holidays:
-        #str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
 
 def holiday_in_month(start,end):
     #str_list_holidays = []
@@ -273,66 +257,78 @@ def last_date_of_month(year, month):
         last_date = datetime(year, month + 1, 1) + timedelta(days=-1)
     return last_date.strftime("%Y-%m-%d")
 
-col_numeric = ['Number of DaysWorked', 'Off Day', 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']
-col_numeric_trip = ['Off Day', 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']
-mainControl[col_numeric] = mainControl[col_numeric].apply(pd.to_numeric, errors='coerce') #convert cols to numeric
-mainControl['FinalWorkingDay'] = mainControl[col_numeric].sum(axis=1, numeric_only=True) #sum multiple cols
+if st.button("Get MainControl"):
+    mainControl_0 = pd.merge(offDay, Driver, on='Code', how='left')
+    mainControl = pd.merge(mainControl_0, emp, on='Code', how='inner')
+    mainControl.drop(columns=['NAME_x', 'NAME_y'])
 
-mainControl['NoWorkTrip'] = mainControl[col_numeric_trip].sum(axis=1, numeric_only=True)
-mainControl['TotalTrips'] = mainControl['ActualNumber of TripsPerformed'] + (mainControl['NoWorkTrip'])*8
-mainControl = mainControl.dropna(subset=['Number of DaysWorked'])
-mainControl = mainControl.reset_index(drop=True)
+    yr = pd.to_datetime(Driver['FirstWorkingDay'].iloc[0]).year
+    str_list_holidays =[]
+    list_holidays = list((holidays.SG(years=[yr])).keys())
+    for holiday in list_holidays:
+            str_list_holidays.append(holiday.strftime("%Y-%m-%d"))
 
-for i in range(len(mainControl)):
-    #print(i)
-    driverCode = mainControl.loc[i,'Code']
-    nationality = mainControl[mainControl['Code']==driverCode]['SCHEME'].values[0]
-    firstWorkingDay = mainControl.loc[mainControl['Code']==driverCode, 'FirstWorkingDay'].values[0]
-    yr = pd.to_datetime(firstWorkingDay).year
-    mth = pd.to_datetime(firstWorkingDay).month
-    start = first_date_of_month(yr, mth)
-    end = last_date_of_month(yr, mth)
-    numbr_WorkingDays = businessDays(yr, mth) + holiday_in_month(start,end)
 
-    if nationality == 'LOC':
-            finalWorkingDay = mainControl['FinalWorkingDay'][i].astype(int)
-            hireDate = pd.to_datetime(mainControl['JOINING DATE'][i], dayfirst=True)
-            serviceYears = (pd.to_numeric((datetime.now() - hireDate).days, downcast='integer') / 365.25)
-            serviceYear = round(serviceYears, 2)
+    col_numeric = ['Number of DaysWorked', 'Off Day', 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']
+    col_numeric_trip = ['Off Day', 'Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']
+    mainControl[col_numeric] = mainControl[col_numeric].apply(pd.to_numeric, errors='coerce') #convert cols to numeric
+    mainControl['FinalWorkingDay'] = mainControl[col_numeric].sum(axis=1, numeric_only=True) #sum multiple cols
+
+    mainControl['NoWorkTrip'] = mainControl[col_numeric_trip].sum(axis=1, numeric_only=True)
+    mainControl['TotalTrips'] = mainControl['ActualNumber of TripsPerformed'] + (mainControl['NoWorkTrip'])*8
+    mainControl = mainControl.dropna(subset=['Number of DaysWorked'])
+    mainControl = mainControl.reset_index(drop=True)
+
+    for i in range(len(mainControl)):
+        #print(i)
+        driverCode = mainControl.loc[i,'Code']
+        nationality = mainControl[mainControl['Code']==driverCode]['SCHEME'].values[0]
+        firstWorkingDay = mainControl.loc[mainControl['Code']==driverCode, 'FirstWorkingDay'].values[0]
+        yr = pd.to_datetime(firstWorkingDay).year
+        mth = pd.to_datetime(firstWorkingDay).month
+        start = first_date_of_month(yr, mth)
+        end = last_date_of_month(yr, mth)
+        numbr_WorkingDays = businessDays(yr, mth) + holiday_in_month(start,end)
+
+        if nationality == 'LOC':
+                finalWorkingDay = mainControl['FinalWorkingDay'][i].astype(int)
+                hireDate = pd.to_datetime(mainControl['JOINING DATE'][i], dayfirst=True)
+                serviceYears = (pd.to_numeric((datetime.now() - hireDate).days, downcast='integer') / 365.25)
+                serviceYear = round(serviceYears, 2)
             
-            totalTrip = int_or_fl(mainControl['TotalTrips'][i])
-            actualTrip = int_or_fl(mainControl['ActualNumber of TripsPerformed'][i])
-            driverName = mainControl['NAME'][i]
-            if finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
-                lstDLP.extend([[driverName, serviceYear, '300', 'Yes']])
-            else:
-                lstDLP.extend([[driverName, serviceYear, '-', 'No']])
+                totalTrip = int_or_fl(mainControl['TotalTrips'][i])
+                actualTrip = int_or_fl(mainControl['ActualNumber of TripsPerformed'][i])
+                driverName = mainControl['NAME'][i]
+                if finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
+                    lstDLP.extend([[driverName, serviceYear, '300', 'Yes']])
+                else:
+                    lstDLP.extend([[driverName, serviceYear, '-', 'No']])
     
-    if nationality == 'TPT':
-            finalWorkingDay = mainControl['FinalWorkingDay'][i].astype(int)
-            hireDate = pd.to_datetime(mainControl['JOINING DATE'][i], dayfirst=True)
-            serviceYears = (pd.to_numeric((datetime.now() - hireDate).days, downcast='integer') / 365.25)
-            serviceYear = round(serviceYears, 2)
+        if nationality == 'TPT':
+                finalWorkingDay = mainControl['FinalWorkingDay'][i].astype(int)
+                hireDate = pd.to_datetime(mainControl['JOINING DATE'][i], dayfirst=True)
+                serviceYears = (pd.to_numeric((datetime.now() - hireDate).days, downcast='integer') / 365.25)
+                serviceYear = round(serviceYears, 2)
             
-            totalTrip = int_or_fl(mainControl['TotalTrips'][i])
-            actualTrip = int_or_fl(mainControl['ActualNumber of TripsPerformed'][i])
-            driverName = mainControl['NAME'][i]
-            if serviceYear >=5 and finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
-                lstDLP.extend([[driverName, serviceYear, '300', 'Yes']])
-            elif serviceYear <5 and serviceYear >= 2 and finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
-                lstDLP.extend([[driverName, serviceYear, '100', 'Yes']])
-            else:
-                lstDLP.extend([[driverName, serviceYear, '-', 'No']])
+                totalTrip = int_or_fl(mainControl['TotalTrips'][i])
+                actualTrip = int_or_fl(mainControl['ActualNumber of TripsPerformed'][i])
+                driverName = mainControl['NAME'][i]
+                if serviceYear >=5 and finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
+                    lstDLP.extend([[driverName, serviceYear, '300', 'Yes']])
+                elif serviceYear <5 and serviceYear >= 2 and finalWorkingDay > numbr_WorkingDays and totalTrip >= finalWorkingDay*8:
+                    lstDLP.extend([[driverName, serviceYear, '100', 'Yes']])
+                else:
+                    lstDLP.extend([[driverName, serviceYear, '-', 'No']])
     
-    if nationality == 'PRC' or nationality == 'BL':
-            lstDLP.extend([[driverName, '-', '-', 'No']])
+        if nationality == 'PRC' or nationality == 'BL':
+                lstDLP.extend([[driverName, '-', '-', 'No']])
 
-dfDLP = pd.DataFrame(lstDLP, columns=['NAME', 'ServiceYear', 'DLP Amount', 'DLP']) #df from list of lists
-mainControl_1 = (pd.merge(mainControl, dfDLP, on='NAME', how='left')).drop(['NoWorkTrip'], axis=1, errors='ignore')
-mainControl_1[['Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']] = mainControl_1[['Driver - Sick Day', 
+    dfDLP = pd.DataFrame(lstDLP, columns=['NAME', 'ServiceYear', 'DLP Amount', 'DLP']) #df from list of lists
+    mainControl_1 = (pd.merge(mainControl, dfDLP, on='NAME', how='left')).drop(['NoWorkTrip'], axis=1, errors='ignore')
+    mainControl_1[['Driver - Sick Day', 'Driver - Hosp', 'Driver - Workshop']] = mainControl_1[['Driver - Sick Day', 
                                                                                                     'Driver - Hosp', 
                                                                                                     'Driver - Workshop']].fillna('-')
-mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
+    mainControl_1.drop(columns=['NAME_x', 'NAME_y'])
 
 #2
 import itertools
