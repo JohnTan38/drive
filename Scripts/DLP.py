@@ -56,7 +56,7 @@ if emp_uploaded is not None:
 st.divider()
 
 def process_dataframe(df):    
-    df['Driver'] = df['Driver'].str.replace('(Driver)', '').str.strip() # Remove '(Driver)' from the 'Driver' column  
+    df['NAME'] = df['NAME'].str.replace('(Driver)', '').str.strip() # Remove '(Driver)' from the 'Driver' column  
     df['SN'] = range(1, len(df) + 1) # Add a new column 'SN' with consecutive numbers from 1 to len(df)     
     df['Mark_2'] = 1 # Add a new column 'Mark_2' with all values set to 1       
     df.rename(columns={'Driver': 'NAME'}, inplace=True) # Rename the 'Driver' column to 'NAME'      
