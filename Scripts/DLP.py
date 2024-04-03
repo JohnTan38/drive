@@ -524,7 +524,7 @@ Incentive.rename(columns={'NAME': 'Code'}, inplace=True)
 mainControl_uploaded = st.file_uploader("MAIN_CONTROL", type=['csv'])
 
 if st.button('Get Incentive'):
-    mainControl_2 = pd.read_excel(mainControl_uploaded)
+    mainControl_2 = pd.read_csv(mainControl_uploaded)
     incentiveFinal = pd.merge(mainControl_2.drop(columns=['NAME_x', 'NAME_y']), Incentive, on='Code', how='outer')
 
     cols_add = ['TotalTripsIncentive', 'PublicHolidayIncentive', 'SundayIncentive', 'MondayHolidayIncentive']
