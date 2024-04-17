@@ -28,7 +28,7 @@ def img_to_html(img_path):
       img_to_bytes(img_path)
     )
     return img_html
-st.markdown("<p style='text-align: center; color: grey;'>"+img_to_html('./image/cars.png')+"</p>", unsafe_allow_html=True)
+#st.markdown("<p style='text-align: center; color: grey;'>"+img_to_html('./image/cars.png')+"</p>", unsafe_allow_html=True)
 
 st.divider()
 emp_url = 'https://raw.githubusercontent.com/JohnTan38/agi/main/docs/EMP.xlsx'
